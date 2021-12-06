@@ -1,0 +1,16 @@
+
+module half_adder(sum, carry, a, b);
+   input a, b;
+   output sum, carry;
+   xor(sum, a, b);
+   and(carry, a, b);
+endmodule
+
+module full_adder(sum, carry, x, y, z);
+   input x, y, z;
+   output sum, carry;
+   wire s1, c1, c2;
+   half_adder h1(s1, c1, x, y);
+   half_adder h2(sum, c2, s1, z);
+   or(carry, c1, c2);
+endmodule

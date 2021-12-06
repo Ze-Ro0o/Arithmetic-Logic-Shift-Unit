@@ -14,3 +14,44 @@ module full_adder(sum, carry, x, y, z);
    half_adder h2(sum, c2, s1, z);
    or(carry, c1, c2);
 endmodule
+
+
+
+/*
+* functions:
+*/
+
+
+
+module andop(Y, A, B);
+   output [3:0] Y;  // Result.
+   input [3:0]  A;  // Operand.
+   input [3:0]  B;  // Operand.
+
+   and(Y[0], A[0], B[0]);
+   and(Y[1], A[1], B[1]);
+   and(Y[2], A[2], B[2]);
+   and(Y[3], A[3], B[3]);
+endmodule // andop
+
+module orop(Y, A, B);
+   output [3:0] Y; // Result.
+   input [3:0]  A; // Operand.
+   input [3:0]  B; // Operand.
+
+   or(Y[0], A[0], B[0]);
+   or(Y[1], A[1], B[1]);
+   or(Y[2], A[2], B[2]);
+   or(Y[3], A[3], B[3]);
+endmodule // orop
+
+module xorop(Y, A, B);
+   output [3:0] Y; // Result.
+   input [3:0]  A; // Operand.
+   input [3:0]  B; // Operand.
+
+   xor(Y[0], A[0], B[0]);
+   xor(Y[1], A[1], B[1]);
+   xor(Y[2], A[2], B[2]);
+   xor(Y[3], A[3], B[3]);
+endmodule // xorop
