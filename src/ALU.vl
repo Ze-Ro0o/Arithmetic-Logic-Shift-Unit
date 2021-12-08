@@ -1,10 +1,13 @@
-
 module half_adder(sum, carry, a, b);
    input a, b;
    output sum, carry;
    xor(sum, a, b);
    and(carry, a, b);
 endmodule
+
+
+//////////////////////////////////////////////////
+
 
 module full_adder(sum, carry, x, y, z);
    input x, y, z;
@@ -15,6 +18,122 @@ module full_adder(sum, carry, x, y, z);
    or(carry, c1, c2);
 endmodule
 
+
+//////////////////////////////////////////////////
+
+
+module MUX4_1(output x,input m1,input m2,input m3,input m4,input s1,input s0);
+wire a,b,c,d,s0com,s1com;
+not(s0com,s0);
+not(s1com,s1);
+and(a,s0com,s1com,m1);
+and(b,s0com,s1,m2);
+and(c,s0,s1com,m3);
+and(d,s0,s1,m4);
+or(x,a,b,c,d);
+endmodule
+
+
+/////////////////////////////////////////////////////
+
+
+module MUX4_4_1(output[3:0] out,input[3:0] in1,input[3:0] in2,input[3:0] in3,input[3:0] in4,input s1,input s0);
+MUX4_1 m1(out[0],in1[0],in2[0],in3[0],in4[0],s1,s0);
+MUX4_1 m2(out[1],in1[1],in2[1],in3[1],in4[1],s1,s0);
+MUX4_1 m3(out[2],in1[2],in2[2],in3[2],in4[2],s1,s0);
+MUX4_1 m4(out[3],in1[3],in2[3],in3[3],in4[3],s1,s0);
+endmodule
+
+
+////////////////////////////////////////////////////
+
+
+module MUX5_4_1(output[4:0] out,input[4:0] in1,input[4:0] in2,input[4:0] in3,input[4:0] in4,input s1,input s0);
+MUX4_1 m1(out[0],in1[0],in2[0],in3[0],in4[0],s1,s0);
+MUX4_1 m2(out[1],in1[1],in2[1],in3[1],in4[1],s1,s0);
+MUX4_1 m3(out[2],in1[2],in2[2],in3[2],in4[2],s1,s0);
+MUX4_1 m4(out[3],in1[3],in2[3],in3[3],in4[3],s1,s0);
+MUX4_1 m5(out[4],in1[4],in2[4],in3[4],in4[4],s1,s0);
+endmodule
+
+
+//////////////////////////////////////////////////
+
+
+module andop(Y, A, B);
+   output [3:0] Y;  // Result.
+   input [3:0]  A;  // Operand.
+   input [3:0]  B;  // Operand.
+
+   and(Y[0], A[0], B[0]);
+   and(Y[1], A[1], B[1]);
+   and(Y[2], A[2], B[2]);
+   and(Y[3], A[3], B[3]);
+endmodule // andop
+
+
+///////////////////////////////////////////////////
+
+
+module orop(Y, A, B);
+   output [3:0] Y; // Result.
+   input [3:0]  A; // Operand.
+   input [3:0]  B; // Operand.
+
+   or(Y[0], A[0], B[0]);
+   or(Y[1], A[1], B[1]);
+   or(Y[2], A[2], B[2]);
+   or(Y[3], A[3], B[3]);
+endmodule // orop
+
+
+///////////////////////////////////////////////////
+
+
+module xorop(Y, A, B);
+   output [3:0] Y; // Result.
+   input [3:0]  A; // Operand.
+   input [3:0]  B; // Operand.
+
+   xor(Y[0], A[0], B[0]);
+   xor(Y[1], A[1], B[1]);
+   xor(Y[2], A[2], B[2]);
+   xor(Y[3], A[3], B[3]);
+endmodule // xorop
+
+
+///////////////////////////////////////////////////
+
+
+module notop(Y, B);
+   output [3:0] Y; // Result.
+   input [3:0]  B; // Operand.
+
+   not(Y[0], B[0]);
+   not(Y[1], B[1]);
+   not(Y[2], B[2]);
+   not(Y[3], B[3]);
+endmodule // notop
+
+
+///////////////////////////////////////////////////
+
+
+module zero(Z, A);
+   output [3:0] Z; // Result. 
+   input [3:0]  A; // Operand.
+
+   wire [3:0] 	 Y; // operand's complement.
+   
+   not(Y[0], A[0]);
+   not(Y[1], A[1]);
+   not(Y[2], A[2]);
+   not(Y[3], A[3]);
+   andop an(Z, Y, A);
+endmodule // zero
+
+
+//////////////////////////////////////////////////
 
 
 /*
@@ -58,109 +177,77 @@ module arithmeticunit(D,A,B,S);
 endmodule
 
 
-module andop(Y, A, B);
-   output [3:0] Y;  // Result.
-   input [3:0]  A;  // Operand.
-   input [3:0]  B;  // Operand.
+////////////////////////////////////////////////////
 
-   and(Y[0], A[0], B[0]);
-   and(Y[1], A[1], B[1]);
-   and(Y[2], A[2], B[2]);
-   and(Y[3], A[3], B[3]);
-endmodule // andop
 
-module orop(Y, A, B);
-   output [3:0] Y; // Result.
-   input [3:0]  A; // Operand.
-   input [3:0]  B; // Operand.
-
-   or(Y[0], A[0], B[0]);
-   or(Y[1], A[1], B[1]);
-   or(Y[2], A[2], B[2]);
-   or(Y[3], A[3], B[3]);
-endmodule // orop
-
-module xorop(Y, A, B);
-   output [3:0] Y; // Result.
-   input [3:0]  A; // Operand.
-   input [3:0]  B; // Operand.
-
-   xor(Y[0], A[0], B[0]);
-   xor(Y[1], A[1], B[1]);
-   xor(Y[2], A[2], B[2]);
-   xor(Y[3], A[3], B[3]);
-endmodule // xorop
-
-module notop(Y, B);
-   output [3:0] Y; // Result.
-   input [3:0]  B; // Operand.
-
-   not(Y[0], B[0]);
-   not(Y[1], B[1]);
-   not(Y[2], B[2]);
-   not(Y[3], B[3]);
-endmodule // notop
-
-module zero(Z, A);
-   output [3:0] Z; // Result. 
-   input [3:0]  A; // Operand.
-
-   wire [3:0] 	 Y; // operand's complement.
-   
-   not(Y[0], A[0]);
-   not(Y[1], A[1]);
-   not(Y[2], A[2]);
-   not(Y[3], A[3]);
-   andop an(Z, Y, A);
-endmodule // zero
-
-/*module MUX4_1(output x,input m1,input m2,input m3,input m4,input s1,input s0);
-/*wire a,b,c,d,s0com,s1com;
-and(a,s0com,s1com,m1);
-and(b,s0com,s1,m2);
-and(c,s0,s1com,m3);
-and(d,s0,s1,m4);
-or(x,a,b,c,d);
-assign x = m1 & (~s0 & ~s1) |
-m2 & (~s0 & s1) |
-m3 & ( s0& ~s1) |
-m4 & ( s1 & s0);
-endmodule*/
-
-module m41(out, a, b, c, d, s1, s0);
-
-output out;
-input a, b, c, d, s0, s1;
-wire sobar, s1bar, T1, T2, T3, T4;
-
-not (s0bar, s0), (s1bar, s1);
-and (T1, a, s0bar, s1bar), (T2, b, s0bar, s1),(T3, c, s0, s1bar), (T4, d, s0, s1);
-or(out, T1, T2, T3, T4);
-
+module logicunit(output[4:0] out,input[3:0] in1,input[3:0] in2,input[1:0] s);
+wire[3:0] a,b,c,d,temp;
+andop an(a,in1,in2);
+orop o(b,in1,in2);
+xorop x(c,in1,in2);
+notop n(d,in1);
+MUX4_4_1 m(temp,a,b,c,d,s[0],s[1]);
+buf(out[0],temp[0]);
+buf(out[1],temp[1]);
+buf(out[2],temp[2]);
+buf(out[3],temp[3]);
+buf(out[4],0);
 endmodule
 
-module MUX4_4_1(output[3:0] out,input[3:0] in1,input[3:0] in2,input[3:0] in3,input[3:0] in4,input s1,input s0);
-m41 m1(out[0],in1[0],in2[0],in3[0],in4[0],s1,s0);
-m41 m2(out[1],in1[1],in2[1],in3[1],in4[1],s1,s0);
-m41 m3(out[2],in1[2],in2[2],in3[2],in4[2],s1,s0);
-m41 m4(out[3],in1[3],in2[3],in3[3],in4[3],s1,s0);
+
+////////////////////////////////////////////////////
+
+
+module shiftright(output[4:0] a,input [3:0] b);
+wire sign;
+buf(a[0],b[1]);
+buf(a[1],b[2]);
+buf(a[2],b[3]);
+or(sign,0,b[3]);
+buf(a[3],sign);
+buf(a[4],0);
 endmodule
 
+
+////////////////////////////////////////////////////
+
+
+module nochange(output[4:0] out,input[3:0] in);
+buf(out[0],in[0]);
+buf(out[1],in[1]);
+buf(out[2],in[2]);
+buf(out[3],in[3]);
+buf(out[4],0);
+endmodule
+
+
+////////////////////////////////////////////////////
+
+
+module ALU(output[4:0] out,input[3:0] in1,input[3:0] in2,input[1:0] s1,input[1:0] s2);
+wire[4:0] a,b,c,d;
+arithmeticunit au(a,in1,in2,s1);
+logicunit lu(b,in1,in2,s1);
+shiftright sr(c,in1);
+nochange nc(d,in1);
+MUX5_4_1 m(out,a,b,c,d,s2[0],s2[1]);
+endmodule
+
+
+////////////////////////////////////////////////////
 
 module main;
-
 wire[4:0] a;
 reg[3:0] b,c;
-reg[1:0] d;
-
-arithmeticunit ar(a,b,c,d);
-
+reg[1:0] s1,s2;
+ALU al(a,b,c,s1,s2);
   initial 
     begin
-    b[3]=1;b[2]=0;b[1]=1;b[0]=1;
-    c[3]=1;c[2]=0;c[1]=1;c[0]=1;
-    d[1]=0;d[0]=0;
-      $monitor("A[4]=%b, A[3]=%b, A[2]=%b, A[1]=%b, A[0]=%b", a[4], a[3], a[2], a[1], a[0]);
+    b[3]=1;b[2]=0;b[1]=1;b[0]=0;
+    c[3]=1;c[2]=0;c[1]=0;c[0]=0;
+    s1[1]=1;s1[0]=1;
+    s2[1]=0;s2[0]=1;
+      $monitor("A[4]=%b, A[3]=%b, A[2]=%b, A[1]=%b, A[0]=%b",a[4], a[3], a[2], a[1], a[0]);
       $finish ; 
     end
 endmodule
