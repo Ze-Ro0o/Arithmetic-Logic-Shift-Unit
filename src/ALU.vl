@@ -21,7 +21,7 @@ endmodule
 
 //////////////////////////////////////////////////
 
-
+// 4*1 multiplixer for 1 bit
 module MUX4_1(output x,input m1,input m2,input m3,input m4,input s1,input s0);
 wire a,b,c,d,s0com,s1com;
 not(s0com,s0);
@@ -36,7 +36,7 @@ endmodule
 
 /////////////////////////////////////////////////////
 
-
+// 4*1 multiplixer for 4 bits
 module MUX4_4_1(output[3:0] out,input[3:0] in1,input[3:0] in2,input[3:0] in3,input[3:0] in4,input s1,input s0);
 MUX4_1 m1(out[0],in1[0],in2[0],in3[0],in4[0],s1,s0);
 MUX4_1 m2(out[1],in1[1],in2[1],in3[1],in4[1],s1,s0);
@@ -47,7 +47,7 @@ endmodule
 
 ////////////////////////////////////////////////////
 
-
+// 4*1 multiplixer for 5 bit
 module MUX5_4_1(output[4:0] out,input[4:0] in1,input[4:0] in2,input[4:0] in3,input[4:0] in4,input s1,input s0);
 MUX4_1 m1(out[0],in1[0],in2[0],in3[0],in4[0],s1,s0);
 MUX4_1 m2(out[1],in1[1],in2[1],in3[1],in4[1],s1,s0);
@@ -134,11 +134,6 @@ endmodule // zero
 
 
 //////////////////////////////////////////////////
-
-
-/*
-* functions:
-*/
 
 /*
 * S = 00 -> A + B
