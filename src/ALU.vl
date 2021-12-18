@@ -118,12 +118,12 @@ endmodule // notop
 
 ///////////////////////////////////////////////////
 
-
+//sets output to zero
 module zero(Z, A);
    output [3:0] Z; // Result. 
    input [3:0]  A; // Operand.
 
-   wire [3:0] 	 Y; // operand's complement.
+   wire [3:0]      Y; // operand's complement.
    
    not(Y[0], A[0]);
    not(Y[1], A[1]);
@@ -138,37 +138,37 @@ endmodule // zero
 /*
 * S = 00 -> A + B
 * S = 01 -> A - B
-* S = 10 -> A - 1
-* S = 11 -> A + 1
+* S = 10 -> A + 1
+* S = 11 -> A - 1
 */
 module arithmeticunit(D,A,B,S);
-	output [4:0] D; //Result
-	input [3:0]  A;  // Operand.
+    output [4:0] D; //Result
+    input [3:0]  A;  // Operand.
     input [3:0]  B;  // Operand.
-	input [1:0]  S;  //selection lines
-	
-	wire [3:0] Bin;
-	wire [3:0] Bnot;
-	wire [4:0] carries;
-	wire [3:0] ones;
-	wire [3:0] zeros;
-	
-	buf(carries[0], S[0]);
-	
-	zero z(zeros,B);
-	notop n1(ones,zeros);
-	notop n2(Bnot,B);
-	MUX4_4_1 m(Bin,B,Bnot,ones,zeros,S[0], S[1]);
-	
-	full_adder f1(D[0],carries[1],A[0],Bin[0],carries[0]);
-	full_adder f2(D[1],carries[2],A[1],Bin[1],carries[1]);
-	full_adder f3(D[2],carries[3],A[2],Bin[2],carries[2]);
-	full_adder f4(D[3],carries[4],A[3],Bin[3],carries[3]);
-	
-	//ignoring carry in cases 01 and 10
-	wire temp;
-	xnor(temp, S[0], S[1]);
-	and(D[4], carries[4], temp);
+    input [1:0]  S;  //selection lines
+    
+    wire [3:0] Bin;
+    wire [3:0] Bnot;
+    wire [4:0] carries;
+    wire [3:0] ones;
+    wire [3:0] zeros;
+    
+    xor(carries[0], S[0], S[1]);
+    
+    zero z(zeros,B);
+    notop n1(ones,zeros);
+    notop n2(Bnot,B);
+    MUX4_4_1 m(Bin,B,Bnot,zeros,ones,S[0], S[1]);
+    
+    full_adder f1(D[0],carries[1],A[0],Bin[0],carries[0]);
+    full_adder f2(D[1],carries[2],A[1],Bin[1],carries[1]);
+    full_adder f3(D[2],carries[3],A[2],Bin[2],carries[2]);
+    full_adder f4(D[3],carries[4],A[3],Bin[3],carries[3]);
+    
+    //ignoring carry in cases 01 and 11
+    wire temp;
+    not(temp, S[0]);
+    and(D[4], carries[4], temp);
 endmodule
 
 
@@ -192,15 +192,14 @@ endmodule
 
 ////////////////////////////////////////////////////
 
-
+//Arithmetic
 module shiftright(output[4:0] a,input [3:0] b);
 wire sign;
 buf(a[0],b[1]);
 buf(a[1],b[2]);
 buf(a[2],b[3]);
-or(sign,0,b[3]);
-buf(a[3],sign);
-buf(a[4],0);
+buf(a[3],b[3]);//to keep sign
+buf(a[4],0);//extra bit
 endmodule
 
 
@@ -240,8 +239,8 @@ ALU al(a,b,c,s1,s2);
     begin
     b[3]=1;b[2]=0;b[1]=1;b[0]=0;
     c[3]=1;c[2]=0;c[1]=0;c[0]=0;
-    s1[1]=1;s1[0]=1;
-    s2[1]=0;s2[0]=1;
+    s1[1]=1;s1[0]=1; //choose operation
+    s2[1]=0;s2[0]=1; //choose unit
       $monitor("A[4]=%b, A[3]=%b, A[2]=%b, A[1]=%b, A[0]=%b",a[4], a[3], a[2], a[1], a[0]);
       $finish ; 
     end
