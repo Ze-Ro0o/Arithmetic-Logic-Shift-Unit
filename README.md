@@ -2,7 +2,7 @@
 
 ### Project Description
 
-Structural Implementation for the ALU in Computer Architecture.
+Structural Verilog Implementation for the ALU in Computer Architecture.
 The ALU does the following operations:
 * Adding two 4-bit numbers.
 * Subtracting two 4-bit numbers.
